@@ -1,30 +1,41 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
-import 'package:project/main.dart';
+import 'package:project/core/constants/app_strings.dart';
+import 'package:project/core/constants/app_theme.dart';
+import 'package:project/core/routes/app_router.dart';
+import 'package:project/providers/auth_provider.dart';
+import 'package:project/providers/analysis_provider.dart';
+import 'package:project/providers/history_provider.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Landing screen shows Login, Register, and Guest options', (
+    WidgetTester tester,
+  ) async {
+    // NOTE: this does NOT call Firebase.initializeApp() — real AuthService/
+    // FirestoreService calls will throw if a screen under test tries to hit
+    // Firebase. For screens that touch auth/firestore, inject fakes via
+    // constructor params (e.g. AuthProvider(authService: FakeAuthService()))
+    // instead of using the real services.
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthProvider()),
+          ChangeNotifierProvider(create: (_) => AnalysisProvider()),
+          ChangeNotifierProvider(create: (_) => HistoryProvider()),
+        ],
+        child: MaterialApp(
+          title: AppStrings.appName,
+          theme: AppTheme.light,
+          initialRoute: AppRoutes.landing,
+          onGenerateRoute: AppRouter.generateRoute,
+        ),
+      ),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text(AppStrings.login), findsOneWidget);
+    expect(find.text(AppStrings.register), findsOneWidget);
+    expect(find.text(AppStrings.signInAsGuest), findsOneWidget);
   });
 }
