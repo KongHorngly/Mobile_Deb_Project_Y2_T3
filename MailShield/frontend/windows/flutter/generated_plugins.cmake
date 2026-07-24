@@ -4,11 +4,19 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   cloud_firestore
+<<<<<<< HEAD
   firebase_auth
   firebase_core
+=======
+  file_selector_windows
+  firebase_auth
+  firebase_core
+  firebase_storage
+>>>>>>> 9d7ba9c73de7b97c301c17ec275ba48f4c1ee908
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  jni
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
