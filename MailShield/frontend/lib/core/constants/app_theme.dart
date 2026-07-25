@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
-
+/// Central ThemeData for CyberMail. Applied once in main.dart / app.dart
+/// via MaterialApp(theme: AppTheme.light).
 class AppTheme {
   AppTheme._();
 
@@ -27,7 +28,7 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.buttonGreen,
           foregroundColor: Colors.white,
-          minimumSize: const Size.fromHeight(48),
+          minimumSize: const Size(64, 40),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
