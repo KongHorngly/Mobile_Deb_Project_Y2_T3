@@ -1,0 +1,20 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+pydantic==2.9.2
+python-multipart==0.0.9
+requests==2.32.3
+
+# Optional — only needed if you set ENABLE_OCR=true (default) and want
+# screenshot analysis to actually extract text. Also requires the
+# `tesseract-ocr` system binary (apt install tesseract-ocr / brew install
+# tesseract). Without it, image analysis still works, just skips OCR.
+pytesseract==0.3.13
+Pillow==10.4.0
+
+# Optional — only needed if you set ENABLE_CLAMAV=true and run a clamd
+# daemon. Safe to leave uninstalled otherwise.
+# clamd==1.0.2
+
+# Optional — only needed once you wire config/firebase.py into a route
+# for server-side auth/history.
+# firebase-admin==6.5.0
