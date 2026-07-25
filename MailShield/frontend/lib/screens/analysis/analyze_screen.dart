@@ -1,5 +1,8 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/routes/app_router.dart';
@@ -12,8 +15,8 @@ import '../../widgets/loading_widget.dart';
 
 enum _AnalyzeCheckOption { attachment, containsLink }
 
-// Email Analysis form, progressing (registered & guest)
-// Image Analysis form, progressing  
+/// Covers 6 mockup screens: Email Analysis form + progressing (registered
+/// & guest) and Image Analysis form + progressing — switched on [type].
 class AnalyzeScreen extends StatefulWidget {
   final String type; // 'email' | 'image'
   final bool isGuest;
@@ -32,6 +35,12 @@ class _AnalyzeScreenState extends State<AnalyzeScreen> {
 
   bool _isAnalyzing = false;
 
+  // Picked-file state
+  String? _pickedEmailFileName;
+  Uint8List? _pickedEmailFileBytes;
+  String? _pickedImageName;
+  Uint8List? _pickedImageBytes;
+
   @override
   void dispose() {
     _senderController.dispose();
@@ -41,6 +50,44 @@ class _AnalyzeScreenState extends State<AnalyzeScreen> {
   }
 
   bool get _isEmail => widget.type == 'email';
+
+  Future<void> _pickEmailFile() async {
+    final result = await FilePicker.pickFiles(
+      type: FileType.any,
+      withData: true, // needed on web to get bytes directly
+    );
+    if (result == null || result.files.isEmpty) return;
+
+    final file = result.files.first;
+    setState(() {
+      _pickedEmailFileName = file.name;
+      _pickedEmailFileBytes = file.bytes;
+    });
+  }
+
+  Future<void> _pickImageFromGallery() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked == null) return;
+
+    final bytes = await picked.readAsBytes();
+    setState(() {
+      _pickedImageName = picked.name;
+      _pickedImageBytes = bytes;
+    });
+  }
+
+  Future<void> _takePhoto() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.camera);
+    if (picked == null) return;
+
+    final bytes = await picked.readAsBytes();
+    setState(() {
+      _pickedImageName = picked.name;
+      _pickedImageBytes = bytes;
+    });
+  }
 
   Future<void> _startAnalysis() async {
     setState(() => _isAnalyzing = true);
@@ -56,14 +103,16 @@ class _AnalyzeScreenState extends State<AnalyzeScreen> {
               senderEmail: _senderController.text.trim(),
               subject: _subjectController.text.trim(),
               body: _bodyController.text.trim(),
+              fileName: _pickedEmailFileName,
               hasAttachment: _checkOption == _AnalyzeCheckOption.attachment,
               containsLink: _checkOption == _AnalyzeCheckOption.containsLink,
             ),
             uidToSaveHistory: uid,
           )
         : await analysisProvider.analyzeImage(
-            const [], 
+            _pickedImageBytes ?? const [],
             uidToSaveHistory: uid,
+            title: _pickedImageName ?? 'Image scan',
           );
 
     if (!mounted) return;
@@ -75,7 +124,7 @@ class _AnalyzeScreenState extends State<AnalyzeScreen> {
           context,
         ).showSnackBar(SnackBar(content: Text(analysisProvider.errorMessage!)));
       }
-      return; 
+      return; // cancelled or failed — stay on the form
     }
 
     Navigator.pushNamed(
@@ -154,11 +203,41 @@ class _AnalyzeScreenState extends State<AnalyzeScreen> {
           hintText: 'Paste email body here',
           maxLines: 4,
         ),
-        const CustomTextField(
-          labelText: AppStrings.uploadFiles,
-          hintText: 'sender_file.eml',
-          prefixIcon: Icon(Icons.attach_file, size: 18),
+        const Text(
+          AppStrings.uploadFiles,
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
+        const SizedBox(height: 6),
+        InkWell(
+          onTap: _pickEmailFile,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            height: 48,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.attach_file, size: 18, color: Colors.black54),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    _pickedEmailFileName ?? 'sender_file.eml',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: _pickedEmailFileName == null
+                          ? Colors.black38
+                          : Colors.black87,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 14),
         RadioListTile<_AnalyzeCheckOption>(
           contentPadding: EdgeInsets.zero,
           dense: true,
@@ -197,13 +276,34 @@ class _AnalyzeScreenState extends State<AnalyzeScreen> {
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
         ),
         const SizedBox(height: 6),
-        Container(
-          height: 48,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8),
+        InkWell(
+          onTap: _pickImageFromGallery,
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            height: 48,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.image_outlined, color: Colors.black54),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    _pickedImageName ?? 'Tap to choose an image',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: _pickedImageName == null
+                          ? Colors.black38
+                          : Colors.black87,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          child: const Icon(Icons.image_outlined, color: Colors.black38),
         ),
         const SizedBox(height: 16),
         const Text(
@@ -215,9 +315,7 @@ class _AnalyzeScreenState extends State<AnalyzeScreen> {
           width: double.infinity,
           height: 44,
           child: ElevatedButton.icon(
-            onPressed: () {
-              // open camera
-            },
+            onPressed: _takePhoto,
             icon: const Icon(Icons.camera_alt_outlined),
             label: const Text(''),
             style: ElevatedButton.styleFrom(

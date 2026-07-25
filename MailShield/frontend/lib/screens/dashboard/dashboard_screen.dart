@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/routes/app_router.dart';
+import '../../providers/auth_provider.dart';
 import '../../widgets/dashboard_card.dart';
 import '../../widgets/dashboard_menu.dart';
 
@@ -24,7 +26,9 @@ class DashboardScreen extends StatelessWidget {
     // TODO: hook up to system exit / confirmation dialog
   }
 
-  void _signOut(BuildContext context) {
+  Future<void> _signOut(BuildContext context) async {
+    await context.read<AuthProvider>().signOut();
+    if (!context.mounted) return;
     Navigator.pushNamedAndRemoveUntil(
       context,
       AppRoutes.landing,
@@ -34,6 +38,8 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = context.watch<AuthProvider>().currentUser;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(gradient: AppColors.primaryGradient),
@@ -84,7 +90,9 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      isGuest ? AppStrings.guest : 'username',
+                      isGuest
+                          ? AppStrings.guest
+                          : (currentUser?.username ?? ''),
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

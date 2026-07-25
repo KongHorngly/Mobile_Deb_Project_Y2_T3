@@ -37,7 +37,7 @@ class AppRouter {
         return _build(const LoginScreen(), settings);
  
       case AppRoutes.register:
-        return _build(const RegisterScreen(), settings); //<===== The name 'RegisterScreen' isn't a class. Try correcting the name to match an existing class.dartcreation_with_non_type
+        return _build(const RegisterScreen(), settings); 
  
       case AppRoutes.dashboard:
        

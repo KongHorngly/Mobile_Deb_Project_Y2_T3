@@ -83,8 +83,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 24),
                   CustomTextField(
                     controller: _usernameController,
-                    hintText: AppStrings.username,
-                    validator: Validators.username,
+                    hintText: AppStrings.email,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: Validators.email,
                   ),
                   CustomTextField(
                     controller: _passwordController,
