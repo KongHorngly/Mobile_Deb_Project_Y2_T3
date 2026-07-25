@@ -3,10 +3,11 @@ import 'package:http/http.dart' as http;
 import '../models/email_model.dart';
 import '../models/analysis_result_model.dart';
 
+
 /// Generic REST client for the backend that performs email/image
 /// phishing analysis. Swap [baseUrl] for your actual API host.
 class ApiService {
-  ApiService({this.baseUrl = 'https://'});
+  ApiService({this.baseUrl = 'http://localhost:8000'});
 
   final String baseUrl;
 
