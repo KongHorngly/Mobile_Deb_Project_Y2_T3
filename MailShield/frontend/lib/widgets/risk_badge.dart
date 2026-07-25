@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../core/constants/app_colors.dart';
 
-/// Small colored label used for verdicts (Safe / Suspicious Detected),
-/// and for security-check values (Trusted / Suspicious / Found / Not found).
+// Small colored label used for verdicts (Safe / Suspicious Detected),
+// and for security-check values (Trusted / Suspicious / Found / Not found).
 class RiskBadge extends StatelessWidget {
   final String label;
   final bool isSafe;

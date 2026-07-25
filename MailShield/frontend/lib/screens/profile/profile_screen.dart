@@ -115,14 +115,6 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const Spacer(),
                       CustomButton(
-                        label: AppStrings.changePassword,
-                        type: ButtonStyleType.outlinedLight,
-                        onPressed: () {
-                          // TODO: navigate to change-password flow
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      CustomButton(
                         label: AppStrings.logout,
                         type: ButtonStyleType.outlinedLight,
                         onPressed: () async {
