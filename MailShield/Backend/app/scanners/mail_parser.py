@@ -58,7 +58,12 @@ def extract_domain(email: str) -> str:
 
 
 def find_suspicious_keywords(text: str) -> List[str]:
-    lowered = (text or "").lower()
+    # OCR output (and some pasted text) often has irregular line breaks,
+    # extra spaces, or tabs splitting a phrase across lines — e.g. a
+    # screenshot banner rendering "URGENT ACTION\nREQUIRED". Collapse all
+    # whitespace runs to a single space before matching so multi-word
+    # keyword phrases still line up.
+    lowered = re.sub(r"\s+", " ", (text or "").lower())
     return [kw for kw in SUSPICIOUS_KEYWORDS if kw in lowered]
 
 

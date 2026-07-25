@@ -27,6 +27,11 @@ class Settings:
     ENABLE_CLAMAV = os.getenv("ENABLE_CLAMAV", "false").lower() == "true"
     ENABLE_OCR = os.getenv("ENABLE_OCR", "true").lower() == "true"
 
+    # Full path to tesseract.exe on Windows if it's not on PATH, e.g.
+    # C:\Program Files\Tesseract-OCR\tesseract.exe. Leave unset on
+    # macOS/Linux where `tesseract` is normally already on PATH.
+    TESSERACT_CMD = os.getenv("TESSERACT_CMD", "")
+
     CLAMD_HOST = os.getenv("CLAMD_HOST", "localhost")
     CLAMD_PORT = int(os.getenv("CLAMD_PORT", "3310"))
 
