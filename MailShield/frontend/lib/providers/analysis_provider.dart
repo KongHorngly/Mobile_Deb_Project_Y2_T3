@@ -4,7 +4,7 @@ import '../models/analysis_result_model.dart';
 import '../services/api_service.dart';
 import '../services/firestore_service.dart';
 
-/// Drives the Email/Image Analysis flow: analyzing state, cancel,
+
 class AnalysisProvider extends ChangeNotifier {
   AnalysisProvider({ApiService? apiService, FirestoreService? firestoreService})
     : _apiService = apiService ?? ApiService(),
@@ -69,7 +69,10 @@ class AnalysisProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final result = await _apiService.analyzeImage(imageBytes);
+      final result = await _apiService.analyzeImage(
+        imageBytes,
+        fileName: title,
+      );
       if (_cancelled) return null;
 
       _lastResult = result;
@@ -95,7 +98,7 @@ class AnalysisProvider extends ChangeNotifier {
     }
   }
 
-  // Called from the "cancel" button
+
   void cancelAnalysis() {
     _cancelled = true;
     _isAnalyzing = false;

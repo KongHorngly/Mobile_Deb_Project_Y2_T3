@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../core/constants/app_strings.dart';
 import 'custom_button.dart';
 
-// The "Analyzing..." progress state shown on both Email Analysis
-// and Image Analysis screens (registered + guest) while a scan runs.
 class LoadingWidget extends StatelessWidget {
   final VoidCallback onCancel;
 

@@ -6,10 +6,8 @@ import '../../models/analysis_result_model.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/risk_badge.dart';
 
-//Email/Image Result (safe/unsafe) 
-// registered and guest users 
 class ResultScreen extends StatelessWidget {
-  final String type; // 'email' | 'image'
+  final String type; 
   final AnalysisResultModel result;
 
   const ResultScreen({super.key, required this.type, required this.result});

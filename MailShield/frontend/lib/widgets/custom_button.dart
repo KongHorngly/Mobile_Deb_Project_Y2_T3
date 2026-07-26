@@ -3,9 +3,6 @@ import '../core/constants/app_colors.dart';
 
 enum ButtonStyleType { green, blue, red, outlinedLight }
 
-/// Reusable button used across the app: Login, Register, Analyze,
-/// Cancel, Analyze another, Back to dashboard, Delete History,
-/// Change Password, Log out style/color driven by [type].
 class CustomButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;

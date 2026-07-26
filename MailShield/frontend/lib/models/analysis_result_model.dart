@@ -23,7 +23,6 @@ class AnalysisResultModel {
   });
 
   factory AnalysisResultModel.placeholder({required bool isSafe}) {
-  // Placeholder result so result_screen.dart is viewable before the
 
     return AnalysisResultModel(
       isSafe: isSafe,
@@ -37,6 +36,7 @@ class AnalysisResultModel {
           ? const [
               'This email appears to be safe.',
               'Continue to verify unexpected request.',
+              
             ]
           : const [
               'Do NOT click the Link and file.',

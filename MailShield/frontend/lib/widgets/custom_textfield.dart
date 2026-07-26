@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Reusable text field used on Login, Register, Email Analysis form,
-/// and History search bar.
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String hintText;
   final String? labelText;
@@ -27,13 +25,22 @@ class CustomTextField extends StatelessWidget {
   });
 
   @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  late bool _obscured = widget.obscureText;
+
+  @override
   Widget build(BuildContext context) {
+    final isPasswordField = widget.obscureText;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (labelText != null) ...[
+        if (widget.labelText != null) ...[
           Text(
-            labelText!,
+            widget.labelText!,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -42,15 +49,28 @@ class CustomTextField extends StatelessWidget {
           const SizedBox(height: 6),
         ],
         TextFormField(
-          controller: controller,
-          obscureText: obscureText,
-          maxLines: obscureText ? 1 : maxLines,
-          keyboardType: keyboardType,
-          validator: validator,
+          controller: widget.controller,
+          obscureText: isPasswordField ? _obscured : false,
+          maxLines: isPasswordField ? 1 : widget.maxLines,
+          keyboardType: widget.keyboardType,
+          validator: widget.validator,
           decoration: InputDecoration(
-            hintText: hintText,
-            prefixIcon: prefixIcon,
-            suffixIcon: suffixIcon,
+            hintText: widget.hintText,
+            prefixIcon: widget.prefixIcon,
+
+           
+            suffixIcon: isPasswordField
+                ? IconButton(
+                    icon: Icon(
+                      _obscured
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      size: 20,
+                      color: Colors.black54,
+                    ),
+                    onPressed: () => setState(() => _obscured = !_obscured),
+                  )
+                : widget.suffixIcon,
           ),
         ),
         const SizedBox(height: 14),

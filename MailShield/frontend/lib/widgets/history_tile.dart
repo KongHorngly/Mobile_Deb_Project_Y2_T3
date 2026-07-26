@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../models/history_model.dart';
 import 'risk_badge.dart';
 
-/// A single row in the History list (sender/subject + verdict + arrow).
 class HistoryTile extends StatelessWidget {
   final HistoryItem item;
   final VoidCallback onTap;

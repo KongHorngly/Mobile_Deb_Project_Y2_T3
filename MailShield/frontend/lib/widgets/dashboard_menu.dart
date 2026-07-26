@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/constants/app_strings.dart';
 
-/// Dashboard hamburger menu. Shows Profile/History/Sign out/Leave for
-/// registered users, or Login/Leave for guests.
+
 class DashboardMenu extends StatelessWidget {
   final bool isGuest;
   final VoidCallback onProfile;

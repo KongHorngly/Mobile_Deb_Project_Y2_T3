@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/constants/app_colors.dart';
 
-/// Card used on the dashboard for Email Analysis, Image Analysis,
-/// and Analysis History (registered + guest dashboards).
 class DashboardCard extends StatelessWidget {
   final String title;
   final String description;
